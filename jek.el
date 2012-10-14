@@ -1,4 +1,5 @@
 (require 'org-publish)
+(require 'cl)
 (require 's)
 
 (defvar jekel/blog-post-path-regex

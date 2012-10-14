@@ -1,15 +1,16 @@
 (require 'org-publish)
 (require 'cl)
 (require 's)
+(require 'markup)
 
-(defvar jekel/blog-post-path-regex
-  "^_posts/\([[:digit:]]+\)-\([[:digit:]]+\)-\([[:digit:]]+\)-\(.+\)\.org"
+(defvar jekel/blog-post-path-regexp
+  "^_posts/\\([[:digit:]]+\\)-\\([[:digit:]]+\\)-\\([[:digit:]]+\\)-\\(.+\\)\.org"
   "The path where jek.el assumes to find blog posts.")
 
 (defvar jekel/permalink-styles
-  '('date "/:category/:year/:month/:day/:title.html"
-    'pretty "/:category/:year/:month/:day/:title/"
-    'none "/:category/:title.html"))
+  '(:date "/:category/:year/:month/:day/:title.html"
+    :pretty "/:category/:year/:month/:day/:title/"
+    :none "/:category/:title.html"))
 
 (defun jekel/create-project ()
   "Creates a new project. Emacs will ask for the title of the new webpage."
@@ -56,6 +57,24 @@ up the directory structure and will load the projects configuration.
 Otherwise it will ask for the jek.el project path, if it was
 already configured for the current emacs session."
   (interactive))
+
+(defun jekel/blog-post-publishing-path (plist path-match-data)
+  "Returns the filename for a specific org-file."
+  (let ((category (or (plist-get plist :category) ""))
+        (year (nth 1 path-match-data))
+        (month (nth 2 path-match-data))
+        (day (nth 3 path-match-data))
+        (title (s-dashed-words (plist-get plist :title)))
+        (resulting-path (plist-get jekel/permalink-styles
+                                   (plist-get plist :jekel-permalink-style))))
+    (setq resulting-path (s-replace ":category" category resulting-path))
+    (setq resulting-path (s-replace ":year" year resulting-path))
+    (setq resulting-path (s-replace ":month" month resulting-path))
+    (setq resulting-path (s-replace ":day" day resulting-path))
+    (setq resulting-path (s-replace ":title" title resulting-path))
+    (when (s-ends-with-p "/" resulting-path)
+      (setq resulting-path (concat resulting-path "index.html")))
+    (substring (s-replace "//" "/" resulting-path) 1)))
 
 (defun jekel/publishing-path (filename)
   "Returns the publishing path for a page")

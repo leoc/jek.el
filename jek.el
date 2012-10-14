@@ -168,8 +168,6 @@ returned instead."
         (car result)
       (nreverse result))))
 
-(jekel/read-layout-forms "~/projects/jek.el/example/_layouts/test.html.el")
-
 (defmacro jekel/render-layout (layout &rest forms)
   "Loads layout with the given name and renders the given forms into it."
   (let* ((layouts-dir "~/projects/jek.el/example/_layouts/")

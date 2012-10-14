@@ -72,18 +72,6 @@ already configured for the current emacs session."
   "Publish coffeescripts via `coffee`."
   (message "publish coffeescript: %s in %s" filename pub-dir))
 
-(defun s-match (regexp s)
-  "Matches a regular expression for string. If the regular expression matches
-the result is the matching string and each groups. If it did not match the
-result is nil."
-  (if (string-match regexp s)
-      (let ((data-list (match-data)))
-        (loop for beg = (car data-list)
-              for end = (car (cdr data-list))
-              while data-list
-              do (setq data-list (cddr data-list))
-              collect (substring s beg end)))))
-
 (defun jekel/publish-org-to-html (plist filename pub-dir)
   "Publish an org file to HTML."
   (message "publish org: %s in %s" filename pub-dir)

@@ -1,0 +1,47 @@
+#+title: Example Blog Post
+#+author: Arthur Leonard Andersen
+#+date: 2012/10/08
+#+keywords: tag1, tag2, tag3
+#+category: example
+
+This is a blog post. Just an example. Jek.el is going to be a static
+website generator with a built-in blogging feature. Just like its Ruby
+cousin Jekyll.
+
+* A Jek.el project
+
+A typical jek.el project has a configuration file that defines the
+projects meta information, a layouts folder that contains the layouts
+that may be used by each page, a posts directory that contains the
+blog posts.
+
+To create a generic jek.el project, simply do "M-x jekel-create-project".
+
+** Jek.el Configuration
+
+The jek.el configuration is done via org-modes publish
+configuration.
+
+#+name: config.el
+#+begin_src emacs-lisp
+
+#+end_src
+
+** Jek.el Layouts
+
+Jek.els layouts are written with markup.el, which is a emacs-lisp
+markup generation library. You do not have to fiddle with html
+directly. Simply write your markup code in lisp.
+
+That´s not only cleaner but also provides the feature of calling
+helper functions inside your markup declaration.
+
+#+name: default.html.el
+#+begin_src emacs-lisp
+
+#+end_src
+
+** Jek.el As Blog Generator
+
+Each blog post is an org-file, stored inside the "_posts" directory.
+

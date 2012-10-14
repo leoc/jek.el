@@ -1,0 +1,45 @@
+* Jek.el
+
+Jek.el is an extension to the org-mode publishing.
+
+** Upcoming Features
+
+- simple configuration via org-publish
+- basic blog features
+  - tags (tag clouds)
+  - categories
+  - permalinks
+  - integration of disqus as commenting engine
+- enhanced layout support via markup.el
+- predefined publishing functions for
+  - less css
+  - coffeescript
+  - markup.el documents
+
+** Usage
+
+*** jekel/create-project
+
+This will create a dummy project with the least amount of files
+necessary to run jekel.
+
+*** jekel/create-page
+
+This will create a new page. Emacs will ask for the file name of the
+new page.
+
+*** jekel/create-post
+
+This will create a new post inside the `_posts` directory. Emacs will
+ask for a title of the new post and create a new post with the current
+date.
+
+*** jekel/publish
+
+When the current buffer shows an org file, then it will go up the
+directory structure and look for a `config.el` file, which contains
+the jek.el project configuration.
+
+When it´s found, it gets loaded and the project will be published.
+Otherwise you will be asked for a project to publish. It is actually a
+wrapper for org-modes `org-publish-project`.

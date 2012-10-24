@@ -246,6 +246,22 @@ The projects property list is scoped into this function with the name `plist`."
                 (t
                  layout-forms))))))
 
+(defun jekel/pretty-format-markup-buffer ()
+  "Reformats the current buffers HTML or XML code to be much prettier.
+This needn´t be done, but if you´d like to have pretty formatted code,
+you can enable it in the jekel configuration.
+
+It basically saves the excursion, switches to nxml-mode and uses the
+indentation rules of nxml-mode to separate tags."
+  (interactive "r")
+  (save-excursion
+    (nxml-mode)
+    (goto-char begin)
+    (while (search-forward-regexp "\>[ \\t]*\<" nil t)
+      (backward-char)
+      (insert "\n"))
+    (indent-region begin end)))
+
 ;; HELPER FUNCTIONS FOR MARKUP.EL
 (defun jekel/blog-post-path-helper (filename)
   "Returns the publishing path of a blog post.")

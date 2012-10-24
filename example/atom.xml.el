@@ -1,11 +1,11 @@
-(:xml
- (:feed
-  (:title "My Weblog")
-  (:link :href "http://www.my-weblog.com/atom.xml" :rel "self")
-  (:link :href "http://www.my-weblog.com")
-  (:updated (jekel-format-xml-date jekel-site-time))
-  (:id "http://www.my-weblog.com")
-  (:author
-   (:name "Arthur Leonard Andersen")
-   (:email "some@email.com"))
-  (loop for )))
+(markup-xml
+ (:xml
+  (:feed
+   (:title jekel-title)
+   (:link :href (concat jekel-url "/atom.xml") :rel "self")
+   (:link :href jekel-url)
+   (:updated "time")
+   (:id jekel-url)
+   (:author
+    (:name jekel-author)
+    (:email jekel-email)))))

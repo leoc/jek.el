@@ -41,7 +41,8 @@ helper functions inside your markup declaration.
 
 #+end_src
 
-** Jek.el As Blog Generator
+** Jek.el As Static Weblog Generator
 
-Each blog post is an org-file, stored inside the "_posts" directory.
+Each blog post is an org-file inside the "_posts" directory (That
+directory may be altered in your projects configuration).
 

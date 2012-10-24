@@ -1,7 +1,4 @@
-(:html5
-  (:head
-   (:title (concat "My Homepage - " pagetitle)))
-  (:body
-   (:h1 "Some text here")
-   (:p "And some more text here")
-   (yield)))
+(let ((page-title "Index"))
+  (jekel/render-layout "default"
+                       (:div :class "posts"
+                             "This is the place where I might iterate through the blog posts and render some links.")))

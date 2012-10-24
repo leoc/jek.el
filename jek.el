@@ -175,31 +175,76 @@ returned instead."
         (car result)
       (nreverse result))))
 
-(defmacro jekel/render-layout (layout &rest forms)
-  "Loads layout with the given name and renders the given forms into it."
-  (let* ((layouts-dir "~/projects/jek.el/example/_layouts/")
-         (layout-filename (concat layouts-dir layout ".html.el"))
-         (layout-forms (jekel/read-layout-forms layout-filename)))
+(defmacro jekel/render-markup-file (markup-filename &rest forms)
+  "Loads layout with the given name and renders the given forms into it.
+
+The projects property list is scoped into this function with the name `plist`."
+  (let* ((markup-forms (jekel/read-layout-forms (if (symbolp markup-filename)
+                                                    (symbol-value markup-filename)
+                                                  markup-filename)))
+         (data-var-name (gensym)))
     `(let ,(cond ((and (listp forms)
                        (listp (car forms)))
-                  `((yield-data (markup ,@forms))
-                    (yield-type 'form)))
+                  `((,data-var-name (markup ,@forms))))
                  ((and (listp forms)
                        (keywordp (car forms)))
-                  `((yield-data (markup ,forms))
-                    (yield-type 'form)))
+                  `((,data-var-name (markup ,forms))))
                  (t
-                  `((yield-data ,@forms)
-                    (yield-type 'string))))
+                  `((,data-var-name ,@forms))))
 
-       ,(cond ((and (listp layout-forms)
-                    (listp (car layout-forms)))
-               `(markup ,@layout-forms))
-              ((and (listp layout-forms)
-                    (keywordp (car layout-forms)))
-               `(markup ,layout-forms))
-              (t
-               layout-forms)))))
+       (flet ((yield () ,(cond ((and (listp forms)
+                                     (listp (car forms)))
+                                `(markup-raw ,data-var-name))
+                               ((and (listp forms)
+                                     (keywordp (car forms)))
+                                `(markup-raw ,data-var-name))
+                               (t
+                                `,data-var-name))))
+
+         ,(cond ((and (listp markup-forms)
+                      (listp (car markup-forms)))
+                 `(markup ,@markup-forms))
+                ((and (listp markup-forms)
+                      (keywordp (car markup-forms)))
+                 `(markup ,markup-forms))
+                (t
+                 markup-forms))))))
+
+(defmacro jekel/render-layout (layout-symbol &rest forms)
+  "Loads layout with the given name and renders the given forms into it.
+
+The projects property list is scoped into this function with the name `plist`."
+  (let* ((layout-filename (if (symbolp layout-symbol)
+                              (symbol-value layout-symbol)
+                            layout-symbol))
+         (layouts-dir "~/projects/jek.el/example/_layouts/")
+         (layout-path (concat layouts-dir layout-filename ".html.el"))
+         (layout-forms (jekel/read-layout-forms layout-path))
+         (data-var-name (gensym)))
+    `(let ,(cond ((and (listp forms)
+                       (listp (car forms)))
+                  `((,data-var-name (markup ,@forms))))
+                 ((and (listp forms)
+                       (keywordp (car forms)))
+                  `((,data-var-name (markup ,forms))))
+                 (t
+                  `((,data-var-name ,@forms))))
+       (flet ((yield () ,(cond ((and (listp forms)
+                                     (listp (car forms)))
+                                `(markup-raw ,data-var-name))
+                               ((and (listp forms)
+                                     (keywordp (car forms)))
+                                `(markup-raw ,data-var-name))
+                               (t
+                                `,data-var-name))))
+         ,(cond ((and (listp layout-forms)
+                      (listp (car layout-forms)))
+                 `(markup ,@layout-forms))
+                ((and (listp layout-forms)
+                      (keywordp (car layout-forms)))
+                 `(markup ,layout-forms))
+                (t
+                 layout-forms))))))
 
 ;; HELPER FUNCTIONS FOR MARKUP.EL
 (defun jekel/blog-post-path-helper (filename)

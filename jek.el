@@ -104,47 +104,76 @@ already configured for the current emacs session."
              (init-buf (current-buffer))
              (init-point (point))
              (init-buf-string (buffer-string))
-             (base-directory (let ((path (plist-get plist :base-directory)))
-                               (if (s-matches? "[^/]$" path)
-                                   (concat path "/")
-                                 path)))
-             (relative-path (s-replace base-directory "" filename))
 
-             (opt-plist
+             (base-directory (expand-file-name
+                              (plist-get plist :base-directory)))
+
+             (relative-path (file-relative-name filename base-directory))
+
+             (plist
               (org-export-process-option-filters
                (org-combine-plists (org-default-export-plist)
                                    plist
                                    (org-infile-export-plist))))
 
-             (is-blog-post-p (s-matches? jekel/blog-post-path-regex
-                                         relative-path))
+             (headline-levels (plist-get plist :headline-levels))
 
-             (post-path-data (s-match jekel/blog-post-path-regex
+             (blog-post-p (s-matches? jekel/blog-post-path-regexp
                                       relative-path))
 
-             page-title
-             page-url
-             page-id
-             page-keywords
-             page-category
-             page-description
-             page-date
+             (post-path-match (s-match jekel/blog-post-path-regexp
+                                       relative-path))
 
-             (pub-path (if is-blog-post-p
-                           (concat pub-dir (jekel/generate-permalink ))))
+             (html-extension (plist-get plist :html-extension))
 
-             (layout (if is-blog-post-p
-                         (or (plist-get plist :jekel-default-blog-post-layout)
-                             "default")
-                       (or (plist-get plist :jekel-default-layout)
-                           "default")))
+             (relative-pub-path (if blog-post-p
+                                    (jekel/blog-post-publishing-path plist post-path-match)
+                                  (concat
+                                   (file-name-sans-extension
+                                    (file-name-nondirectory buffer-file-name))
+                                   "." html-extension)))
 
-             (exported-html (org-export-as-html (plist-get plist :headline-levels)
-                                                nil plist 'string
-                                                t pub-dir)))
+             (pub-dir (expand-file-name (file-name-directory relative-pub-path)
+                                        (file-name-as-directory
+                                         (or (if blog-post-p
+                                                 (plist-get plist :publishing-directory)
+                                               pub-dir)
+                                             (org-export-directory :html plist)))))
 
-        (jekel/render-layout layout
-                             exported-html)
+             (pub-filename (file-name-nondirectory relative-pub-path))
+
+             (pub-path (expand-file-name pub-filename
+                                         pub-dir))
+
+             (layout (or (plist-get plist :layout)
+                         (if blog-post-p
+                             (plist-get plist :jekel-default-blog-post-layout)
+                           (plist-get plist :jekel-default-layout))
+                         "default"))
+
+             (page-id relative-pub-path)
+             (jekel-title (plist-get plist :jekel-title))
+             (page-title (plist-get plist :title))
+             (page-author (plist-get plist :author))
+             (page-url relative-pub-path)
+             (page-keywords (plist-get plist :keywords))
+             (page-category (plist-get plist :category))
+             (page-description (plist-get plist :description))
+             (page-time nil))
+
+        (let ((exported-html (org-export-as-html headline-levels
+                                                 nil plist 'string
+                                                 t pub-dir)))
+          (save-excursion
+            (unless (file-exists-p pub-dir)
+              (make-directory pub-dir t))
+
+            (find-file pub-path)
+            (insert (jekel/render-layout layout
+                                         (markup-raw exported-html)))
+            (save-buffer)
+            (kill-buffer)))
+
 
         (set-buffer init-buf)
         (when (buffer-modified-p init-buf)

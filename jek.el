@@ -76,27 +76,42 @@ already configured for the current emacs session."
       (setq resulting-path (concat resulting-path "index.html")))
     (substring (s-replace "//" "/" resulting-path) 1)))
 
-(defun jekel/publishing-path (filename)
-  "Returns the publishing path for a page")
-
 (defun jekel/publish-asset (plist filename pub-dir)
   "Publish assets."
   (message "publish asset file: %s in %s" filename pub-dir))
 
-(defun jekel/publish-less-stylesheets (plist filename pub-dir)
+(defun jekel/publish-less-stylesheet (plist filename pub-dir)
   "Publish stylesheets via `lessc`."
   (message "publish less stylesheet: %s in %s" filename pub-dir))
 
-(defun jekel/publish-coffeescripts (plist filename pub-dir)
+(defun jekel/publish-coffeescript (plist filename pub-dir)
   "Publish coffeescripts via `coffee`."
   (message "publish coffeescript: %s in %s" filename pub-dir))
 
+(defun jekel/publish-markup (plist filename pub-dir)
+  "Publish markup files."
+  (save-excursion
+    (let* ((jekel-title (plist-get plist :jekel-title))
+           (jekel-url (plist-get plist :jekel-url))
+           (jekel-author (plist-get plist :author))
+           (jekel-email (plist-get plist :email))
+
+           (pub-filename (expand-file-name
+                          (file-name-nondirectory
+                           (s-chop-suffix ".el" filename))
+                          pub-dir)))
+
+      (unless (file-exists-p pub-dir)
+        (make-directory pub-dir t))
+
+      (find-file pub-filename)
+      (insert (jekel/render-markup-file filename))
+      (save-buffer)
+      (kill-buffer))))
+
 (defun jekel/publish-org-to-html (plist filename pub-dir)
   "Publish an org file to HTML."
-  (message "publish org: %s in %s" filename pub-dir)
   (require 'org)
-  (unless (file-exists-p pub-dir)
-    (make-directory pub-dir t))
   (let ((visiting (find-buffer-visiting filename)))
     (save-excursion
       (org-pop-to-buffer-same-window (or visiting (find-file filename)))

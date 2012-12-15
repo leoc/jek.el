@@ -1,3 +1,72 @@
+;;; jek.el --- Jekyll-like static web site generation for org-publish.
+
+;; Copyright (c) 2012 Arthur Leonard Andersen
+;;
+;; Author: Arthur Leonard Andersen <leoc.git@gmail.com>
+;; URL: http://github.com/leoc/jek.el
+;; Version: 0.1.0
+;; Keywords: Convenience, Markup, HTML
+;;
+;; This file is not part of GNU Emacs.
+;;
+;; This program is free software; you can redistribute it and/or
+;; modify it under the terms of the GNU General Public License
+;; as published by the Free Software Foundation; either version 3
+;; of the License, or (at your option) any later version.
+;;
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with GNU Emacs; see the file COPYING.  If not, write to the
+;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
+
+;;; Commentary:
+
+;; The goal of Jekel is to simplify the generation of static websites
+;; with org-mode. It features functions to help creating (nested)
+;; layouts, to preprocess stylesheets and javascript and to manage
+;; content objects (for example for blogs).
+;;
+;; Features:
+;;
+;;   - generation of markup via `markup.el` package
+;;   - integration of Sass and Coffeescript compilers
+;;   - nested layouts (define layout in org file properties)
+;;
+;; File mapping:
+;;
+;;   - `.html.el` - markup.el
+;;   - `.xml.el` - markup.el
+;;   - `.css.scss` - Sass (needs to be installed)
+;;   - `.css.sass` - Sass (needs to be installed)
+;;   - `.js.coffee` - Coffeescript (needs to be installed)
+;;   - `.org` - Function: `jekel/publish-org-to-html`
+;;
+;; Install:
+;;
+;;   Add `jek.el` to your load path and add (require 'jekel) to your init.el.
+;;
+;; Usage:
+;;
+;;   To create a project call the interactive function
+;; `jekel/create-project` you will be asked for the location to create
+;; your new project in. A basic jekel project will be initialized
+;; there.
+;;
+;;   When in any file that´s part of a jekel project just call
+;; `jekel/compile`. It will look up the `jekel-conf.el`, load the
+;; project configuration and compile all project files according the
+;; the configuration.
+;;
+;;   When the config has been loaded via your `init.el` your project
+;; has been added to the `org-publish-project-alist`. Then you can
+;; simply compile via `org-publish-project`.
+;;
+;;; Code:
 (require 'org-publish)
 (require 'cl)
 (require 's)

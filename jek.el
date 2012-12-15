@@ -206,8 +206,8 @@ already configured for the current emacs session."
 (defun jekel/publish-org-to-html (plist filename pub-dir)
   "Publish an org file to HTML."
   (require 'org)
-  (let ((visiting (find-buffer-visiting filename)))
-    (save-excursion
+  (save-excursion
+    (let ((visiting (find-buffer-visiting filename)))
       (org-pop-to-buffer-same-window (or visiting (find-file filename)))
       (let* ((plist (cons :buffer-will-be-killed (cons t plist)))
              (init-buf (current-buffer))
@@ -278,7 +278,7 @@ already configured for the current emacs session."
               (make-directory pub-dir t))
 
             (find-file pub-path)
-            (insert (jekel/render-layout layout
+            (insert(jekel/render-layout layout
                                          (markup-raw exported-html)))
             (save-buffer)
             (kill-buffer)))

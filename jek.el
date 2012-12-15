@@ -81,10 +81,35 @@
     :pretty "/:category/:year/:month/:day/:title/"
     :none "/:category/:title.html"))
 
-(defun jekel/create-project ()
+(defun jekel/create-project (project-dir project-title)
   "Creates a new project. Emacs will ask for the title of the new webpage."
-  (interactive)
-  )
+  (interactive "FWhere to create jekel project? \nsWebsite title: ")
+  (let* ((project-name (file-name-nondirectory project-dir))
+         (project-publish-dir (concat project-dir "/_site"))
+         (project-conf (format "(defjekel \"%s\"
+  :base-directory \"%s\"
+  :publishing-directory \"%s\"
+  :title \"%s\"
+  :url \"http://www.example.org\"
+  :default-layout \"default\"
+  :default-blog-post-layout \"post\"
+  :permalink-style :pretty
+  :blog-archive nil
+  :future-blog-posts nil
+  :export-coffeescripts t
+  :export-less-css t
+  :commenting-engine :disqus
+  :author \"Finn & Jake\"
+  :email \"awesome@adventuretime.com\")"
+                       project-name
+                       project-dir
+                       project-publish-dir
+                       project-title)))
+    (unless (file-exists-p project-dir)
+      (make-directory project-dir t))
+    (find-file (concat project-dir "/jekel-conf.el"))
+    (insert project-conf)
+    (save-buffer)))
 
 (defun jekel/create-post ()
   "Creates a new post. Emacs will ask for the title of the new post."

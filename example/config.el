@@ -43,23 +43,20 @@
          :recursive t
          :publishing-directory "~/projects/jek.el/example/_site/"
          :publishing-function jekel/publish-asset)
+        ("example-coffee"
+         :base-directory "~/projects/jek.el/example/"
+         :base-extension "js.coffee"
+         :recursive t
+         :publishing-directory "~/projects/jek.el/example/_site/"
+         :publishing-function jekel/publish-coffee)
+        ("example-sass"
+         :base-directory "~/projects/jek.el/example/"
+         :base-extension "css.sass\\|css.scss"
+         :recursive t
+         :publishing-directory "~/projects/jek.el/example/_site/"
+         :publishing-function jekel/publish-sass)
         ("example" :components ("example-org"
                                 "example-markup"
-                                "example-asset"))))
-
-
-(defjekel "example"
-  :base-directory "~/projects/jek.el/example/"
-  :publishing-directory "~/projects/jek.el/example/_site/"
-  :jekel-title "An Example Weblog"
-  :jekel-url "http://www.example.org"
-  :jekel-default-layout "default"
-  :jekel-default-blog-post-layout "post"
-  :jekel-permalink-style :pretty
-  :jekel-blog-archive nil
-  :jekel-future-blog-posts nil
-  :jekel-export-coffeescripts t
-  :jekel-export-less-css t
-  :jekel-commenting-engine :disqusg
-  :author "Finn & Jake"
-  :email "awesome@adventuretime")
+                                "example-asset"
+                                "example-coffee"
+                                "example-sass"))))

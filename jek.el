@@ -93,6 +93,69 @@
     :pretty "/:category/:year/:month/:day/:title/"
     :none "/:category/:title.html"))
 
+(defmacro defjekel (name &rest options)
+  "Defines a new org-publish-project with all the settings for a jek.el project.
+
+You can specify the following options:
+
+   :title               - The title of the website.
+   :url                 - The url the website will be available at.
+   :author              - The name of the author of the website.
+   :email               - The email address of the author.
+   :default-layout      - The default layout to use for files that do not
+                          specify a layout.
+   :default-post-layout - Blog posts are special entities. They can use a
+                          different layout by default."
+
+  (let* ((shared-options `(:base-directory ,(or (plist-get options :base-directory)
+                                                (file-name-directory load-file-name))
+                           :recursive t
+                           :publishing-directory ,(or (plist-get options :publishing-directory)
+                                                      (file-name-as-directory
+                                                       (expand-file-name "_site"
+                                                                         (file-name-directory load-file-name))))
+                           :author ,(plist-get options :author)
+                           :email ,(plist-get options :email)
+                           :jekel-title ,(plist-get options :title)
+                           :jekel-url ,(plist-get options :url)
+                           :jekel-default-layout ,(or (plist-get options :default-layout)
+                                                      "default")
+                           :jekel-default-post-layout ,(or (plist-get options :default-post-layout)
+                                                           "post")))
+
+         (org-properties `(:base-extension "org"
+                           :publishing-function jekel/publish-org-to-html
+                           :headline-levels 3
+                           :section-numbers nil
+                           :table-of-contents nil
+                           :jekel-permalink-style ,(or (plist-get options :permalink-style) :pretty)
+                           :jekel-future-blog-posts ,(or (plist-get options :export-future-posts) nil)))
+         (markup-properties '(:base-extension "html.el\\|xml.el"
+                              :exclude "_layouts\\|_site\\|_posts"
+                              :publishing-function jekel/publish-markup))
+         (asset-properties '(:base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
+                             :exclude "_layouts\\|_site\\|_posts"
+                             :publishing-function jekel/publish-asset))
+         (coffee-properties '(:base-extension "js.coffee"
+                              :exclude "_layouts\\|_site\\|_posts"
+                              :publishing-function jekel/publish-coffee))
+         (sass-properties '(:base-extension "css.sass\\|css.scss"
+                            :exclude "_layouts\\|_site\\|_posts"
+                            :publishing-function jekel/publish-sass))
+         project-alist)
+
+    (add-to-list 'org-publish-project-alist `(,name :components (,(concat name "-org")
+                                                     ,(concat name "-markup")
+                                                     ,(concat name "-asset")
+                                                     ,(concat name "-coffee")
+                                                     ,(concat name "-sass"))))
+
+    (add-to-list 'org-publish-project-alist `(,(concat name "-sass") ,@(kvplist-merge sass-properties shared-options)))
+    (add-to-list 'org-publish-project-alist `(,(concat name "-coffee") ,@(kvplist-merge coffee-properties shared-options)))
+    (add-to-list 'org-publish-project-alist `(,(concat name "-asset") ,@(kvplist-merge asset-properties shared-options)))
+    (add-to-list 'org-publish-project-alist `(,(concat name "-markup") ,@(kvplist-merge markup-properties shared-options)))
+    (add-to-list 'org-publish-project-alist `(,(concat name "-org") ,@(kvplist-merge org-properties shared-options)))))
+
 (defun jekel/create-project (project-dir project-title)
   "Creates a new project. Emacs will ask for the title of the new webpage."
   (interactive "FWhere to create jekel project? \nsWebsite title: ")

@@ -144,17 +144,19 @@ You can specify the following options:
                             :publishing-function jekel/publish-sass))
          project-alist)
 
-    (add-to-list 'org-publish-project-alist `(,name :components (,(concat name "-org")
-                                                     ,(concat name "-markup")
-                                                     ,(concat name "-asset")
-                                                     ,(concat name "-coffee")
-                                                     ,(concat name "-sass"))))
+    `(progn
+       (add-to-list 'org-publish-project-alist '(,name :components (,(concat name "-org")
+                                                                    ,(concat name "-markup")
+                                                                    ,(concat name "-asset")
+                                                                    ,(concat name "-coffee")
+                                                                    ,(concat name "-sass"))))
 
-    (add-to-list 'org-publish-project-alist `(,(concat name "-sass") ,@(kvplist-merge sass-properties shared-options)))
-    (add-to-list 'org-publish-project-alist `(,(concat name "-coffee") ,@(kvplist-merge coffee-properties shared-options)))
-    (add-to-list 'org-publish-project-alist `(,(concat name "-asset") ,@(kvplist-merge asset-properties shared-options)))
-    (add-to-list 'org-publish-project-alist `(,(concat name "-markup") ,@(kvplist-merge markup-properties shared-options)))
-    (add-to-list 'org-publish-project-alist `(,(concat name "-org") ,@(kvplist-merge org-properties shared-options)))))
+
+       (add-to-list 'org-publish-project-alist ',(cons (concat name "-sass") (kvplist-merge sass-properties shared-options)))
+       (add-to-list 'org-publish-project-alist ',(cons (concat name "-coffee") (kvplist-merge coffee-properties shared-options)))
+       (add-to-list 'org-publish-project-alist ',(cons (concat name "-asset") (kvplist-merge asset-properties shared-options)))
+       (add-to-list 'org-publish-project-alist ',(cons (concat name "-markup") (kvplist-merge markup-properties shared-options)))
+       (add-to-list 'org-publish-project-alist ',(cons (concat name "-org") (kvplist-merge org-properties shared-options))))))
 
 (defun jekel/create-project (project-dir project-title)
   "Creates a new project. Emacs will ask for the title of the new webpage."

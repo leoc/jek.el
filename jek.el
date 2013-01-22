@@ -227,7 +227,16 @@ up the directory structure and will load the projects configuration.
 
 Otherwise it will ask for the jek.el project path, if it was
 already configured for the current emacs session."
-  (interactive))
+  (interactive)
+  (let* ((project-directory-name (or (locate-dominating-file default-directory "jekel-conf.el")
+                                     (ido-read-directory-name "Give project directory:")))
+         (project-file-name (concat project-directory-name "jekel-conf.el"))
+         (org-publish-project-alist nil))
+    (load-file project-file-name)
+    ;; we assume the project alist is filled only by the defjekel
+    ;; macro, because we locally shadowed it with nil previously
+    ;(org-publish-project (car ()))
+    (org-publish-project (caar (last org-publish-project-alist)))))
 
 (defun jekel/blog-post-publishing-path (plist path-match-data)
   "Returns the filename for a specific org-file."

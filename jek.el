@@ -260,9 +260,9 @@ already configured for the current emacs session."
   "Publish assets."
   (message "publish asset file: %s in %s" filename pub-dir))
 
-(defun jekel/publish-less-stylesheet (plist filename pub-dir)
-  "Publish stylesheets via `lessc`."
-  (message "publish less stylesheet: %s in %s" filename pub-dir))
+(defun jekel/publish-sass (plist filename pub-dir)
+  "Publish sass via `sass`."
+  (message "publish sass: %s in %s" filename pub-dir))
 
 (defun jekel/publish-coffeescript (plist filename pub-dir)
   "Publish coffeescripts via `coffee`."

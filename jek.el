@@ -72,6 +72,18 @@
 (require 's)
 (require 'markup)
 
+(defun kvplist-merge (old new)
+  "Merges two plists. The keys from NEW will overwrite the ones in OLD."
+  (let ((key (car new))
+        (val (cadr new))
+        (new (cddr new)))
+    (while (and key val)
+      (setq old (plist-put old key val))
+      (setq key (car new))
+      (setq val (cadr new))
+      (setq new (cddr new)))
+    old))
+
 (defvar jekel/blog-post-path-regexp
   "^_posts/\\([[:digit:]]+\\)-\\([[:digit:]]+\\)-\\([[:digit:]]+\\)-\\(.+\\)\.org"
   "The path where jek.el assumes to find blog posts.")

@@ -375,7 +375,13 @@ already configured for the current emacs session."
         (unless visiting
           (kill-buffer init-buf))))))
 
-(defun jekel/read-layout-forms (layout-filename)
+(defmacro jekel--define-markup-helpers (&rest body)
+  "Defines markup helpers via FLET."
+  `(flet ((render-layout (layout-symbol &rest body)
+                         (apply 'jekel--render-layout layout-symbol body)))
+     ,@body))
+
+(defun jekel--read-layout-forms (layout-filename)
   "Reads the expressions from a layout file.
 
 When there where more than one expressions, then a list of expressions is

@@ -84,11 +84,11 @@
       (setq new (cddr new)))
     old))
 
-(defvar jekel/blog-post-path-regexp
+(defvar jekel--blog-post-path-regexp
   "^_posts/\\([[:digit:]]+\\)-\\([[:digit:]]+\\)-\\([[:digit:]]+\\)-\\(.+\\)\.org"
   "The path where jek.el assumes to find blog posts.")
 
-(defvar jekel/permalink-styles
+(defvar jekel--permalink-styles
   '(:date "/:category/:year/:month/:day/:title.html"
     :pretty "/:category/:year/:month/:day/:title/"
     :none "/:category/:title.html"))
@@ -124,7 +124,7 @@ You can specify the following options:
                                                            "post")))
 
          (org-properties `(:base-extension "org"
-                           :publishing-function jekel/publish-org-to-html
+                           :publishing-function jekel--publish-org-to-html
                            :headline-levels 3
                            :section-numbers nil
                            :table-of-contents nil
@@ -132,16 +132,16 @@ You can specify the following options:
                            :jekel-future-blog-posts ,(or (plist-get options :export-future-posts) nil)))
          (markup-properties '(:base-extension "html.el\\|xml.el"
                               :exclude "_layouts\\|_site\\|_posts"
-                              :publishing-function jekel/publish-markup))
+                              :publishing-function jekel--publish-markup))
          (asset-properties '(:base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
                              :exclude "_layouts\\|_site\\|_posts"
-                             :publishing-function jekel/publish-asset))
+                             :publishing-function jekel--publish-asset))
          (coffee-properties '(:base-extension "js.coffee"
                               :exclude "_layouts\\|_site\\|_posts"
-                              :publishing-function jekel/publish-coffee))
+                              :publishing-function jekel--publish-coffee))
          (sass-properties '(:base-extension "css.sass\\|css.scss"
                             :exclude "_layouts\\|_site\\|_posts"
-                            :publishing-function jekel/publish-sass))
+                            :publishing-function jekel--publish-sass))
          project-alist)
 
     `(progn
@@ -194,15 +194,15 @@ You can specify the following options:
 
 ;; JEK.EL - GATHERING META DATA
 
-(defun jekel/blog-keywords ()
+(defun jekel--blog-keywords ()
   "Returns a list of keywords/tags for the current project.
 Note: `base-directory` has to be defined.")
 
-(defun jekel/blog-categories ()
+(defun jekel--blog-categories ()
   "Returns a list of categories for the current project.
 Note: `base-directory` has to be defined.")
 
-(defun jekel/blog-posts ()
+(defun jekel--blog-posts ()
   "Returns a list of blog posts with all their meta data for the current
 project.
 
@@ -211,10 +211,10 @@ category information, tag clouds and so on.
 
 Note: `base-directory` has to be defined.")
 
-(defun jekel/blog-posts-for-tag (tag)
+(defun jekel--blog-posts-for-tag (tag)
   "Returns a list of all posts for a specific tag for the current project.")
 
-(defun jekel/blog-posts-for-category (category)
+(defun jekel--blog-posts-for-category (category)
   "Returns a list of all posts for a specific category for the current project.")
 
 ;; JEK.EL - PUBLISHING FUNCTIONS
@@ -238,14 +238,14 @@ already configured for the current emacs session."
     ;(org-publish-project (car ()))
     (org-publish-project (caar (last org-publish-project-alist)))))
 
-(defun jekel/blog-post-publishing-path (plist path-match-data)
+(defun jekel--blog-post-publishing-path (plist path-match-data)
   "Returns the filename for a specific org-file."
   (let ((category (or (plist-get plist :category) ""))
         (year (nth 1 path-match-data))
         (month (nth 2 path-match-data))
         (day (nth 3 path-match-data))
         (title (s-dashed-words (plist-get plist :title)))
-        (resulting-path (plist-get jekel/permalink-styles
+        (resulting-path (plist-get jekel--permalink-styles
                                    (plist-get plist :jekel-permalink-style))))
     (setq resulting-path (s-replace ":category" category resulting-path))
     (setq resulting-path (s-replace ":year" year resulting-path))
@@ -256,19 +256,19 @@ already configured for the current emacs session."
       (setq resulting-path (concat resulting-path "index.html")))
     (substring (s-replace "//" "/" resulting-path) 1)))
 
-(defun jekel/publish-asset (plist filename pub-dir)
+(defun jekel--publish-asset (plist filename pub-dir)
   "Publish assets."
   (message "publish asset file: %s in %s" filename pub-dir))
 
-(defun jekel/publish-sass (plist filename pub-dir)
+(defun jekel--publish-sass (plist filename pub-dir)
   "Publish sass via `sass`."
   (message "publish sass: %s in %s" filename pub-dir))
 
-(defun jekel/publish-coffeescript (plist filename pub-dir)
+(defun jekel--publish-coffeescript (plist filename pub-dir)
   "Publish coffeescripts via `coffee`."
   (message "publish coffeescript: %s in %s" filename pub-dir))
 
-(defun jekel/publish-markup (plist filename pub-dir)
+(defun jekel--publish-markup (plist filename pub-dir)
   "Publish markup files."
   (save-excursion
     (let* ((jekel-title (plist-get plist :jekel-title))
@@ -289,7 +289,7 @@ already configured for the current emacs session."
       (save-buffer)
       (kill-buffer))))
 
-(defun jekel/publish-org-to-html (plist filename pub-dir)
+(defun jekel--publish-org-to-html (plist filename pub-dir)
   "Publish an org file to HTML."
   (require 'org)
   (save-excursion
@@ -313,16 +313,16 @@ already configured for the current emacs session."
 
              (headline-levels (plist-get plist :headline-levels))
 
-             (blog-post-p (s-matches? jekel/blog-post-path-regexp
+             (blog-post-p (s-matches? jekel--blog-post-path-regexp
                                       relative-path))
 
-             (post-path-match (s-match jekel/blog-post-path-regexp
+             (post-path-match (s-match jekel--blog-post-path-regexp
                                        relative-path))
 
              (html-extension (plist-get plist :html-extension))
 
              (relative-pub-path (if blog-post-p
-                                    (jekel/blog-post-publishing-path plist post-path-match)
+                                    (jekel--blog-post-publishing-path plist post-path-match)
                                   (concat
                                    (file-name-sans-extension
                                     (file-name-nondirectory buffer-file-name))
@@ -399,11 +399,11 @@ returned instead."
         (car result)
       (nreverse result))))
 
-(defmacro jekel/render-markup-file (markup-filename &rest forms)
+(defmacro jekel--render-markup-file (markup-filename &rest forms)
   "Loads layout with the given name and renders the given forms into it.
 
 The projects property list is scoped into this function with the name `plist`."
-  (let* ((markup-forms (jekel/read-layout-forms (if (symbolp markup-filename)
+  (let* ((markup-forms (jekel--read-layout-forms (if (symbolp markup-filename)
                                                     (symbol-value markup-filename)
                                                   markup-filename)))
          (data-var-name (gensym)))
@@ -434,7 +434,7 @@ The projects property list is scoped into this function with the name `plist`."
                 (t
                  markup-forms))))))
 
-(defmacro jekel/render-layout (layout-symbol &rest forms)
+(defun jekel--render-layout (layout-name &rest forms)
   "Loads layout with the given name and renders the given forms into it.
 
 The projects property list is scoped into this function with the name `plist`."
@@ -470,7 +470,7 @@ The projects property list is scoped into this function with the name `plist`."
                 (t
                  layout-forms))))))
 
-(defun jekel/pretty-format-markup-buffer ()
+(defun jekel--pretty-format-markup-buffer ()
   "Reformats the current buffers HTML or XML code to be much prettier.
 This needn´t be done, but if you´d like to have pretty formatted code,
 you can enable it in the jekel configuration.

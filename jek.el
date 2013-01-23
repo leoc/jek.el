@@ -265,6 +265,11 @@ already configured for the current emacs session."
            (jekel-author (plist-get plist :author))
            (jekel-email (plist-get plist :email))
 
+           (base-directory (expand-file-name
+                            (plist-get plist :base-directory)))
+
+           (layouts-directory (expand-file-name "_layouts/" base-directory))
+
            (pub-filename (expand-file-name
                           (file-name-nondirectory
                            (s-chop-suffix ".el" filename))
@@ -291,6 +296,8 @@ already configured for the current emacs session."
 
              (base-directory (expand-file-name
                               (plist-get plist :base-directory)))
+
+             (layouts-directory (expand-file-name "_layouts/" base-directory))
 
              (relative-path (file-relative-name filename base-directory))
 

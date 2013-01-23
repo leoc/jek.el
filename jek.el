@@ -164,18 +164,8 @@ You can specify the following options:
   (let* ((project-name (file-name-nondirectory project-dir))
          (project-publish-dir (concat project-dir "/_site"))
          (project-conf (format "(defjekel \"%s\"
-  :base-directory \"%s\"
-  :publishing-directory \"%s\"
   :title \"%s\"
   :url \"http://www.example.org\"
-  :default-layout \"default\"
-  :default-blog-post-layout \"post\"
-  :permalink-style :pretty
-  :blog-archive nil
-  :future-blog-posts nil
-  :export-coffeescripts t
-  :export-less-css t
-  :commenting-engine :disqus
   :author \"Finn & Jake\"
   :email \"awesome@adventuretime.com\")"
                        project-name

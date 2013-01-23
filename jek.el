@@ -169,8 +169,6 @@ You can specify the following options:
   :author \"Finn & Jake\"
   :email \"awesome@adventuretime.com\")"
                        project-name
-                       project-dir
-                       project-publish-dir
                        project-title)))
     (unless (file-exists-p project-dir)
       (make-directory project-dir t))

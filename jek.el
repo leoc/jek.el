@@ -434,37 +434,11 @@ The projects property list is scoped into this function with the name `plist`."
   "Loads layout with the given name and renders the given forms into it.
 
 The projects property list is scoped into this function with the name `plist`."
-  (let* ((layout-filename (if (symbolp layout-symbol)
-                              (symbol-value layout-symbol)
-                            layout-symbol))
-         (layouts-dir "~/projects/jek.el/example/_layouts/")
-         (layout-path (concat layouts-dir layout-filename ".html.el"))
-         (layout-forms (jekel/read-layout-forms layout-path))
-         (data-var-name (gensym)))
-    `(let ,(cond ((and (listp forms)
-                       (listp (car forms)))
-                  `((,data-var-name (markup ,@forms))))
-                 ((and (listp forms)
-                       (keywordp (car forms)))
-                  `((,data-var-name (markup ,forms))))
-                 (t
-                  `((,data-var-name ,@forms))))
-       (flet ((yield () ,(cond ((and (listp forms)
-                                     (listp (car forms)))
-                                `(markup-raw ,data-var-name))
-                               ((and (listp forms)
-                                     (keywordp (car forms)))
-                                `(markup-raw ,data-var-name))
-                               (t
-                                `,data-var-name))))
-         ,(cond ((and (listp layout-forms)
-                      (listp (car layout-forms)))
-                 `(markup ,@layout-forms))
-                ((and (listp layout-forms)
-                      (keywordp (car layout-forms)))
-                 `(markup ,layout-forms))
-                (t
-                 layout-forms))))))
+  (let ((layout-file-name (concat (if (boundp 'layouts-directory)
+                                      layouts-directory
+                                    default-directory)
+                                  layout-name ".html.el")))
+    (eval `(jekel--render-markup-file ,layout-file-name ,@forms))))
 
 (defun jekel--pretty-format-markup-buffer ()
   "Reformats the current buffers HTML or XML code to be much prettier.

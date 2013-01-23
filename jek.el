@@ -225,7 +225,6 @@ already configured for the current emacs session."
     (load-file project-file-name)
     ;; we assume the project alist is filled only by the defjekel
     ;; macro, because we locally shadowed it with nil previously
-    ;(org-publish-project (car ()))
     (org-publish-project (caar (last org-publish-project-alist)))))
 
 (defun jekel--blog-post-publishing-path (plist path-match-data)

@@ -44,7 +44,7 @@
 ;;   - `.css.scss` - Sass (needs to be installed)
 ;;   - `.css.sass` - Sass (needs to be installed)
 ;;   - `.js.coffee` - Coffeescript (needs to be installed)
-;;   - `.org` - Function: `jekel/publish-org-to-html`
+;;   - `.org` - Function: `jekel--publish-org-to-html`
 ;;
 ;; Install:
 ;;
@@ -58,7 +58,7 @@
 ;; there.
 ;;
 ;;   When in any file that´s part of a jekel project just call
-;; `jekel/compile`. It will look up the `jekel-conf.el`, load the
+;; `jekel/publish`. It will look up the `jekel-conf.el`, load the
 ;; project configuration and compile all project files according the
 ;; the configuration.
 ;;

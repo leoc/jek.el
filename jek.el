@@ -456,15 +456,4 @@ indentation rules of nxml-mode to separate tags."
       (insert "\n"))
     (indent-region begin end)))
 
-;; HELPER FUNCTIONS FOR MARKUP.EL
-(defun jekel/blog-post-path-helper (filename)
-  "Returns the publishing path of a blog post.")
-
-(defun jekel/asset-path-helper (filename)
-  "Returns the publishing path of an asset file.")
-
-(defun jekel/tag-cloud-helper ()
-  "Renders a tag cloud.")
-
-
 (provide 'jekel)

@@ -118,10 +118,8 @@ You can specify the following options:
                            :email ,(plist-get options :email)
                            :jekel-title ,(plist-get options :title)
                            :jekel-url ,(plist-get options :url)
-                           :jekel-default-layout ,(or (plist-get options :default-layout)
-                                                      "default")
-                           :jekel-default-post-layout ,(or (plist-get options :default-post-layout)
-                                                           "post")))
+                           :jekel-default-layout ,(or (plist-get options :default-layout) "default")
+                           :jekel-default-post-layout ,(or (plist-get options :default-post-layout) "post")))
 
          (org-properties `(:base-extension "org"
                            :publishing-function jekel--publish-org-to-html

@@ -279,7 +279,10 @@ already configured for the current emacs session."
         (make-directory pub-dir t))
 
       (find-file pub-filename)
-      (insert (jekel/render-markup-file filename))
+
+      (jekel--define-markup-helpers
+       (insert (jekel--render-markup-file filename)))
+
       (save-buffer)
       (kill-buffer))))
 
@@ -360,8 +363,11 @@ already configured for the current emacs session."
               (make-directory pub-dir t))
 
             (find-file pub-path)
-            (insert(jekel/render-layout layout
-                                         (markup-raw exported-html)))
+
+            (jekel--define-markup-helpers
+             (insert (jekel--render-layout layout
+                                           (markup-raw exported-html))))
+
             (save-buffer)
             (kill-buffer)))
 

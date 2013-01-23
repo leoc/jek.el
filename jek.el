@@ -160,17 +160,18 @@ You can specify the following options:
   "Creates a new project. Emacs will ask for the title of the new webpage."
   (interactive "FWhere to create jekel project? \nsWebsite title: ")
   (let* ((project-name (file-name-nondirectory project-dir))
-         (project-publish-dir (concat project-dir "/_site"))
+         (project-publish-dir (expand-file-name "_site/" project-dir))
          (project-conf (format "(defjekel \"%s\"
   :title \"%s\"
   :url \"http://www.example.org\"
   :author \"Finn & Jake\"
   :email \"awesome@adventuretime.com\")"
                        project-name
-                       project-title)))
+                       project-title))
+         (project-file-name (expand-file-name "jekel-conf.el" project-dir)))
     (unless (file-exists-p project-dir)
       (make-directory project-dir t))
-    (find-file (concat project-dir "/jekel-conf.el"))
+    (find-file project-file-name)
     (insert project-conf)
     (save-buffer)))
 

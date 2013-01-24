@@ -246,11 +246,24 @@ already configured for the current emacs session."
   "Publish assets."
   (message "publish asset file: %s in %s" filename pub-dir))
 
-(defun jekel--publish-sass (plist filename pub-dir)
+(defun jekel--publish-sass (plist source-file-name pub-dir)
   "Publish sass via `sass`."
-  (message "publish sass: %s in %s" filename pub-dir))
+  (let* ((base-directory (expand-file-name
+                          (plist-get plist :base-directory)))
+         (pub-file-name (expand-file-name
+                         (file-name-nondirectory
+                          (replace-regexp-in-string "\\(sass\\|scss\\)$" "css" source-file-name))
+                         pub-dir))
+         (command (format "sass --no-cache %S %S"
+                          source-file-name
+                          pub-file-name)))
 
-(defun jekel--publish-coffeescript (plist filename pub-dir)
+    (unless (file-exists-p pub-dir)
+      (make-directory pub-dir t))
+
+    (shell-command command)))
+
+(defun jekel--publish-coffee (plist source-file-name pub-dir)
   "Publish coffeescripts via `coffee`."
   (message "publish coffeescript: %s in %s" filename pub-dir))
 

@@ -134,10 +134,10 @@ You can specify the following options:
          (asset-properties '(:base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
                              :exclude "_layouts\\|_site\\|_posts"
                              :publishing-function jekel--publish-asset))
-         (coffee-properties '(:base-extension "js.coffee"
+         (coffee-properties '(:base-extension "coffee"
                               :exclude "_layouts\\|_site\\|_posts"
                               :publishing-function jekel--publish-coffee))
-         (sass-properties '(:base-extension "css.sass\\|css.scss"
+         (sass-properties '(:base-extension "sass\\|scss"
                             :exclude "_layouts\\|_site\\|_posts"
                             :publishing-function jekel--publish-sass))
          project-alist)

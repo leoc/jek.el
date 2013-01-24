@@ -462,15 +462,18 @@ The projects property list is scoped into this function with the name `plist`."
                 (t
                  markup-forms))))))
 
-(defun jekel--render-layout (layout-name &rest forms)
+(defmacro jekel--render-layout (layout-symbol &rest forms)
   "Loads layout with the given name and renders the given forms into it.
 
 The projects property list is scoped into this function with the name `plist`."
-  (let ((layout-file-name (concat (if (boundp 'layouts-directory)
-                                      layouts-directory
-                                    default-directory)
-                                  layout-name ".html.el")))
-    (eval `(jekel--render-markup-file ,layout-file-name ,@forms))))
+  (let* ((layout-name (if (symbolp layout-symbol)
+                          (symbol-value layout-symbol)
+                        layout-symbol))
+         (layout-file-name (concat (if (boundp 'layouts-directory)
+                                       layouts-directory
+                                     default-directory)
+                                   layout-name ".html.el")))
+    `(jekel--render-markup-file ,layout-file-name ,@forms)))
 
 (defun jekel--pretty-format-markup-buffer ()
   "Reformats the current buffers HTML or XML code to be much prettier.

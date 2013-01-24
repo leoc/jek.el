@@ -403,9 +403,11 @@ already configured for the current emacs session."
 
 (defmacro jekel--define-markup-helpers (&rest body)
   "Defines markup helpers via FLET."
-  `(flet ((render-layout (layout-symbol &rest body)
-                         (apply 'jekel--render-layout layout-symbol body)))
-     ,@body))
+  `(flet ((abc () nil))
+     (macrolet ((render-layout
+                 (layout-symbol &rest body)
+                 `(jekel--render-layout ,layout-symbol ,@body)))
+       ,@body)))
 
 (defun jekel--read-layout-forms (layout-filename)
   "Reads the expressions from a layout file.

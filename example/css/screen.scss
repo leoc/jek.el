@@ -1,0 +1,9 @@
+body {
+    div.someclass {
+        background-color: #ffd;
+
+        &.active {
+            background-color: #aad;
+        }
+    }
+}

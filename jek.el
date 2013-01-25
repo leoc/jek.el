@@ -262,19 +262,11 @@ already configured for the current emacs session."
 
 (defun jekel--publish-coffee (plist source-file-name pub-dir)
   "Publish coffeescripts via `coffee`."
-  (let ((base-directory (expand-file-name
-                         (plist-get plist :base-directory)))
-        (command (format "coffee --output %S --compile %S"
+
+  (unless (file-exists-p pub-dir)
+    (make-directory pub-dir t))
+  (shell-command (format "coffee --output %S --compile %S"
                          pub-dir source-file-name)))
-
-    (message command)
-
-    (unless (file-exists-p pub-dir)
-      (make-directory pub-dir t))
-
-    (shell-command (format "sass --no-cache %S %S"
-                           source-file-name
-                           pub-file-name))))
 
 (defun jekel--publish-markup (plist filename pub-dir)
   "Publish markup files."

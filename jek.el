@@ -248,20 +248,17 @@ already configured for the current emacs session."
 
 (defun jekel--publish-sass (plist source-file-name pub-dir)
   "Publish sass via `sass`."
-  (let* ((base-directory (expand-file-name
-                          (plist-get plist :base-directory)))
-         (pub-file-name (expand-file-name
-                         (file-name-nondirectory
-                          (replace-regexp-in-string "\\(sass\\|scss\\)$" "css" source-file-name))
-                         pub-dir))
-         (command (format "sass --no-cache %S %S"
-                          source-file-name
-                          pub-file-name)))
+  (let ((pub-file-name (expand-file-name
+                        (file-name-nondirectory
+                         (replace-regexp-in-string "\\(sass\\|scss\\)$" "css" source-file-name))
+                        pub-dir)))
 
     (unless (file-exists-p pub-dir)
       (make-directory pub-dir t))
 
-    (shell-command command)))
+    (shell-command (format "sass --no-cache %S %S"
+                           source-file-name
+                           pub-file-name))))
 
 (defun jekel--publish-coffee (plist source-file-name pub-dir)
   "Publish coffeescripts via `coffee`."
@@ -275,7 +272,9 @@ already configured for the current emacs session."
     (unless (file-exists-p pub-dir)
       (make-directory pub-dir t))
 
-    (shell-command command)))
+    (shell-command (format "sass --no-cache %S %S"
+                           source-file-name
+                           pub-file-name))))
 
 (defun jekel--publish-markup (plist filename pub-dir)
   "Publish markup files."

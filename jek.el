@@ -403,7 +403,21 @@ already configured for the current emacs session."
 
 (defmacro jekel--define-markup-helpers (&rest body)
   "Defines markup helpers via FLET."
-  `(flet ((abc () nil))
+  `(flet ((stylesheet-include-tag (&rest stylesheets)
+                                  (markup-raw
+                                   (mapconcat '(lambda (stylesheet)
+                                                 (let ((*markup-language* :html))
+                                                   (markup (:link :href stylesheet :rel "stylesheet" :type "text/css"))))
+                                              stylesheets "")))
+          (javascript-include-tag (&rest javascripts)
+                                  (markup-raw
+                                   (mapconcat '(lambda (javascript)
+                                                 (let ((*markup-language* :html))
+                                                   (markup (:script :src javascript :type "text/javascript"))))
+                                              javascripts "")))
+          (link-to (title url)
+                   (markup-raw (let ((*markup-language* :html))
+                                 (markup (:a :href url title))))))
      (macrolet ((render-layout
                  (layout-symbol &rest body)
                  `(jekel--render-layout ,layout-symbol ,@body)))

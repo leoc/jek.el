@@ -365,6 +365,8 @@ already configured for the current emacs session."
                            (plist-get plist :jekel-default-layout))
                          "default"))
 
+             (org-export-htmlize-output-type 'css)
+
              (page-id relative-pub-path)
              (jekel-title (plist-get plist :jekel-title))
              (page-title (plist-get plist :title))

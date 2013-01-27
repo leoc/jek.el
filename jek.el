@@ -190,6 +190,38 @@ Note: `base-directory` has to be defined.")
   "Returns a list of categories for the current project.
 Note: `base-directory` has to be defined.")
 
+(defun jekel--make-keyword (str)
+  "Makes a new intern :keyword from STR."
+  (intern (concat ":" (s-dashed-words (s-downcase str)))))
+
+(defun jekel--org-infile-plist (file-name)
+  (with-temp-buffer
+    (insert-file-contents file-name)
+    (beginning-of-buffer)
+    (loop while (re-search-forward "#+\\([^:]+\\):\\(.+\\)" (line-end-position) t)
+          append (let ((key (match-string-no-properties 1))
+                       (val (match-string-no-properties 2)))
+                   `(,(jekel--make-keyword key)
+                     ,(s-trim val)))
+          do (progn (beginning-of-line)
+                    (forward-line)))))
+
+(defun jekel--blog-post-plist (file-name)
+  "Returns a list with the blog-posts properties."
+  (let* ((blog-post-plist (jekel--org-infile-plist file-name))
+         (relative-path (file-relative-name file-name base-directory))
+         (post-path-match (s-match jekel--blog-post-path-regexp relative-path))
+         (post-time (date-to-time (concat (nth 1 post-path-match) "-"
+                                          (nth 2 post-path-match) "-"
+                                          (nth 3 post-path-match)
+                                          " 00:00:00 UTC")))
+         (relative-publishing-url (jekel--blog-post-publishing-path blog-post-plist post-path-match)))
+
+    (setq blog-post-plist (plist-put blog-post-plist :time post-time))
+    (setq blog-post-plist (plist-put blog-post-plist :url relative-publishing-url))
+
+    blog-post-plist))
+
 (defun jekel--blog-posts ()
   "Returns a list of blog posts with all their meta data for the current
 project.

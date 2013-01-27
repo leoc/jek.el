@@ -131,7 +131,7 @@ You can specify the following options:
          (markup-properties '(:base-extension "html.el\\|xml.el"
                               :exclude "_layouts\\|_site\\|_posts"
                               :publishing-function jekel--publish-markup))
-         (asset-properties '(:base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
+         (asset-properties '(:base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|woff\\|ttf\\|svg\\|eot"
                              :exclude "_layouts\\|_site\\|_posts"
                              :publishing-function jekel--publish-asset))
          (coffee-properties '(:base-extension "coffee"

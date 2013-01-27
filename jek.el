@@ -380,12 +380,12 @@ already configured for the current emacs session."
                                     (file-name-nondirectory buffer-file-name))
                                    "." html-extension)))
 
-             (pub-dir (expand-file-name (file-name-directory relative-pub-path)
-                                        (file-name-as-directory
-                                         (or (if blog-post-p
-                                                 (plist-get plist :publishing-directory)
-                                               pub-dir)
-                                             (org-export-directory :html plist)))))
+             (pub-dir (if blog-post-p
+                          (expand-file-name (file-name-directory relative-pub-path)
+                                            (file-name-as-directory
+                                             (or (plist-get plist :publishing-directory)
+                                                 (org-export-directory :html plist))))
+                        pub-dir))
 
              (pub-filename (file-name-nondirectory relative-pub-path))
 

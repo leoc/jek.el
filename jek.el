@@ -229,13 +229,16 @@ project.
 This is especially useful to iterate through posts for listings, archives,
 category information, tag clouds and so on.
 
-Note: `base-directory` has to be defined.")
-
-(defun jekel--blog-posts-for-tag (tag)
-  "Returns a list of all posts for a specific tag for the current project.")
-
-(defun jekel--blog-posts-for-category (category)
-  "Returns a list of all posts for a specific category for the current project.")
+Note: `base-directory` has to be defined."
+  (let* ((posts-directory (expand-file-name "_posts/"
+                                            (or base-directory default-directory)))
+         (post-files (directory-files posts-directory t "\\.org"))
+         (sort-function '(lambda (a b)
+                           (time-less-p (plist-get b :time)
+                                        (plist-get a :time)))))
+    (sort (loop for file-name in post-files
+                collect (jekel--blog-post-plist file-name))
+          sort-function))))
 
 ;; JEK.EL - PUBLISHING FUNCTIONS
 

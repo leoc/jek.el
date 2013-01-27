@@ -116,6 +116,7 @@ You can specify the following options:
                                                                          (file-name-directory load-file-name))))
                            :author ,(plist-get options :author)
                            :email ,(plist-get options :email)
+                           :jekel-project ,name
                            :jekel-title ,(plist-get options :title)
                            :jekel-url ,(plist-get options :url)
                            :jekel-default-layout ,(or (plist-get options :default-layout) "default")

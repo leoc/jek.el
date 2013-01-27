@@ -139,7 +139,7 @@ You can specify the following options:
                               :exclude "_layouts\\|_site\\|_posts"
                               :publishing-function jekel--publish-coffee))
          (sass-properties '(:base-extension "sass\\|scss"
-                            :exclude "_layouts\\|_site\\|_posts"
+                            :exclude "_layouts\\|_site\\|_posts\\|_[^/]+\\.\\(scss\\|sass\\)"
                             :publishing-function jekel--publish-sass))
          project-alist)
 

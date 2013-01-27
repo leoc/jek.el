@@ -355,19 +355,21 @@ already configured for the current emacs session."
 
              (relative-path (file-relative-name filename base-directory))
 
-             (plist
-              (org-export-process-option-filters
-               (org-combine-plists (org-default-export-plist)
-                                   plist
-                                   (org-infile-export-plist))))
-
-             (headline-levels (plist-get plist :headline-levels))
-
              (blog-post-p (s-matches? jekel--blog-post-path-regexp
                                       relative-path))
 
              (post-path-match (s-match jekel--blog-post-path-regexp
                                        relative-path))
+
+             (plist
+              (org-export-process-option-filters
+               (org-combine-plists (org-default-export-plist)
+                                   plist
+                                   (if blog-post-p
+                                       (jekel--blog-post-plist filename)
+                                     (jekel--org-infile-plist filename)))))
+
+             (headline-levels (plist-get plist :headline-levels))
 
              (html-extension (plist-get plist :html-extension))
 

@@ -268,7 +268,8 @@ already configured for the current emacs session."
         (day (nth 3 path-match-data))
         (title (s-dashed-words (plist-get plist :title)))
         (resulting-path (plist-get jekel--permalink-styles
-                                   (plist-get plist :jekel-permalink-style))))
+                                   (or (plist-get plist :jekel-permalink-style)
+                                       :pretty))))
     (setq resulting-path (s-replace ":category" category resulting-path))
     (setq resulting-path (s-replace ":year" year resulting-path))
     (setq resulting-path (s-replace ":month" month resulting-path))

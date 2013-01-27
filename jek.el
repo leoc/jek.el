@@ -442,17 +442,34 @@ already configured for the current emacs session."
   `(flet ((stylesheet-include-tag (&rest stylesheets)
                                   (markup-raw
                                    (mapconcat '(lambda (stylesheet)
-                                                 (let ((*markup-language* :html))
+                                                 (let ((*markup-language* :html)
+                                                       (stylesheet (if (s-matches? "^https?://" stylesheet)
+                                                                       stylesheet
+                                                                     (file-relative-name
+                                                                      (expand-file-name stylesheet
+                                                                                        (expand-file-name "_site" base-directory))
+                                                                      (or pub-dir default-directory)))))
                                                    (markup (:link :href stylesheet :rel "stylesheet" :type "text/css"))))
                                               stylesheets "")))
           (javascript-include-tag (&rest javascripts)
                                   (markup-raw
                                    (mapconcat '(lambda (javascript)
-                                                 (let ((*markup-language* :html))
+                                                 (let ((*markup-language* :html)
+                                                       (javascript (if (s-matches? "^https?://" javascript)
+                                                                       javascript
+                                                                     (file-relative-name
+                                                                      (expand-file-name javascript
+                                                                                        (expand-file-name "_site" base-directory))
+                                                                      (or pub-dir default-directory)))))
                                                    (markup (:script :src javascript :type "text/javascript"))))
                                               javascripts "")))
           (link-to (title url)
-                   (markup-raw (let ((*markup-language* :html))
+                   (markup-raw (let ((url (if (s-matches? "^https?://" url)
+                                              url
+                                            (file-relative-name
+                                             (expand-file-name url
+                                                               (expand-file-name "_site" base-directory))
+                                             (or pub-dir default-directory)))))
                                  (markup (:a :href url title))))))
      (macrolet ((render-layout
                  (layout-symbol &rest body)

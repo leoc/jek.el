@@ -402,13 +402,14 @@ already configured for the current emacs session."
 
              (page-id relative-pub-path)
              (jekel-title (plist-get plist :jekel-title))
+             (jekel-project (plist-get plist :jekel-project))
              (page-title (plist-get plist :title))
              (page-author (plist-get plist :author))
              (page-url relative-pub-path)
              (page-keywords (plist-get plist :keywords))
              (page-category (plist-get plist :category))
              (page-description (plist-get plist :description))
-             (page-time nil))
+             (page-time (plist-get plist :time)))
 
         (let ((exported-html (org-export-as-html headline-levels
                                                  nil plist 'string

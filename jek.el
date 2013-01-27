@@ -280,7 +280,9 @@ already configured for the current emacs session."
 
 (defun jekel--publish-asset (plist filename pub-dir)
   "Publish assets."
-  (message "publish asset file: %s in %s" filename pub-dir))
+  (unless (file-exists-p pub-dir)
+    (make-directory pub-dir t))
+  (copy-file filename (expand-file-name (file-name-nondirectory filename) pub-dir)))
 
 (defun jekel--publish-sass (plist source-file-name pub-dir)
   "Publish sass via `sass`."

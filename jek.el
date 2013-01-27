@@ -451,6 +451,7 @@ already configured for the current emacs session."
                                                                       (or pub-dir default-directory)))))
                                                    (markup (:link :href stylesheet :rel "stylesheet" :type "text/css"))))
                                               stylesheets "")))
+
           (javascript-include-tag (&rest javascripts)
                                   (markup-raw
                                    (mapconcat '(lambda (javascript)
@@ -463,6 +464,16 @@ already configured for the current emacs session."
                                                                       (or pub-dir default-directory)))))
                                                    (markup (:script :src javascript :type "text/javascript"))))
                                               javascripts "")))
+
+          (blog-posts ()
+                      (jekel--blog-posts))
+
+          (format-time-xml (time)
+                           (format-time-string "%Y-%m-%dT%H:%M:%S%z" time))
+
+          (format-time (str &optional time)
+                       (format-time-string str time))
+
           (link-to (title url)
                    (markup-raw (let ((url (if (s-matches? "^https?://" url)
                                               url

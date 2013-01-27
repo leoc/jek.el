@@ -394,7 +394,7 @@ already configured for the current emacs session."
 
              (layout (or (plist-get plist :layout)
                          (if blog-post-p
-                             (plist-get plist :jekel-default-blog-post-layout)
+                             (plist-get plist :jekel-default-post-layout)
                            (plist-get plist :jekel-default-layout))
                          "default"))
 

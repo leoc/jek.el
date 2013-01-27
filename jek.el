@@ -313,6 +313,7 @@ already configured for the current emacs session."
            (jekel-url (plist-get plist :jekel-url))
            (jekel-author (plist-get plist :author))
            (jekel-email (plist-get plist :email))
+           (jekel-project (plist-get plist :jekel-project))
 
            (base-directory (expand-file-name
                             (plist-get plist :base-directory)))

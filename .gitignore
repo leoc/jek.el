@@ -1,3 +1,6 @@
 example/_site
 scratch.el
+dev.el
 /.cask/
+*.elc
+/elpa

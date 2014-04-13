@@ -3,9 +3,9 @@
 (package "jek.el" "1.0.0"
          "Easy blogging with org-mode publishing.")
 
-(package-file "jek.el")
+(package-file "jekel.el")
 
-(files "jek.el")
+(files "jekel.el")
 
 (depends-on "htmlize")
 (depends-on "f")

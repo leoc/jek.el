@@ -1,4 +1,4 @@
-;;; jek.el --- Jekyll-like static web site generation for org-publish.
+;;; jekel.el --- Jekyll-like static web site generation for org-publish.
 
 ;; Copyright (c) 2012 Arthur Leonard Andersen
 ;;
@@ -67,7 +67,7 @@
 ;; simply compile via `org-publish-project`.
 ;;
 ;;; Code:
-(require 'org-publish)
+(require 'htmlize)
 (require 'cl)
 (require 's)
 (require 'markup)
@@ -129,33 +129,48 @@ You can specify the following options:
                            :table-of-contents nil
                            :jekel-permalink-style ,(or (plist-get options :permalink-style) :pretty)
                            :jekel-future-blog-posts ,(or (plist-get options :export-future-posts) nil)))
+
          (markup-properties '(:base-extension "html.el\\|xml.el"
                               :exclude "_layouts\\|_site\\|_posts"
                               :publishing-function jekel--publish-markup))
+
          (asset-properties '(:base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|woff\\|ttf\\|svg\\|eot"
                              :exclude "_layouts\\|_site\\|_posts"
                              :publishing-function jekel--publish-asset))
+
          (coffee-properties '(:base-extension "coffee"
                               :exclude "_layouts\\|_site\\|_posts"
                               :publishing-function jekel--publish-coffee))
+
          (sass-properties '(:base-extension "sass\\|scss"
                             :exclude "_layouts\\|_site\\|_posts\\|_[^/]+\\.\\(scss\\|sass\\)"
                             :publishing-function jekel--publish-sass))
+
          project-alist)
 
     `(progn
-       (add-to-list 'org-publish-project-alist '(,name :components (,(concat name "-org")
-                                                                    ,(concat name "-markup")
-                                                                    ,(concat name "-asset")
-                                                                    ,(concat name "-coffee")
-                                                                    ,(concat name "-sass"))))
+       (add-to-list 'org-publish-project-alist
+                    '(,name :components (,(concat name "-org")
+                                         ,(concat name "-markup")
+                                         ,(concat name "-asset")
+                                         ,(concat name "-coffee")
+                                         ,(concat name "-sass"))))
 
-
-       (add-to-list 'org-publish-project-alist ',(cons (concat name "-sass") (kvplist-merge sass-properties shared-options)))
-       (add-to-list 'org-publish-project-alist ',(cons (concat name "-coffee") (kvplist-merge coffee-properties shared-options)))
-       (add-to-list 'org-publish-project-alist ',(cons (concat name "-asset") (kvplist-merge asset-properties shared-options)))
-       (add-to-list 'org-publish-project-alist ',(cons (concat name "-markup") (kvplist-merge markup-properties shared-options)))
-       (add-to-list 'org-publish-project-alist ',(cons (concat name "-org") (kvplist-merge org-properties shared-options))))))
+       (add-to-list 'org-publish-project-alist
+                    ',(cons (concat name "-sass")
+                            (kvplist-merge sass-properties shared-options)))
+       (add-to-list 'org-publish-project-alist
+                    ',(cons (concat name "-coffee")
+                            (kvplist-merge coffee-properties shared-options)))
+       (add-to-list 'org-publish-project-alist
+                    ',(cons (concat name "-asset")
+                            (kvplist-merge asset-properties shared-options)))
+       (add-to-list 'org-publish-project-alist
+                    ',(cons (concat name "-markup")
+                            (kvplist-merge markup-properties shared-options)))
+       (add-to-list 'org-publish-project-alist
+                    ',(cons (concat name "-org")
+                            (kvplist-merge org-properties shared-options))))))
 
 (defun jekel/create-project (project-dir project-title)
   "Creates a new project. Emacs will ask for the title of the new webpage."
@@ -184,11 +199,14 @@ You can specify the following options:
 
 (defun jekel--blog-keywords ()
   "Returns a list of keywords/tags for the current project.
-Note: `base-directory` has to be defined.")
+Note: `base-directory` has to be defined."
+  (let (())
+    ))
 
 (defun jekel--blog-categories ()
   "Returns a list of categories for the current project.
-Note: `base-directory` has to be defined.")
+Note: `base-directory` has to be defined."
+  )
 
 (defun jekel--make-keyword (str)
   "Makes a new intern :keyword from STR."
@@ -215,11 +233,11 @@ Note: `base-directory` has to be defined.")
                                           (nth 2 post-path-match) "-"
                                           (nth 3 post-path-match)
                                           " 00:00:00 UTC")))
-         (relative-publishing-url (jekel--blog-post-publishing-path blog-post-plist post-path-match)))
+         (relative-publishing-url
+          (jekel--blog-post-publishing-path blog-post-plist post-path-match)))
 
     (setq blog-post-plist (plist-put blog-post-plist :time post-time))
     (setq blog-post-plist (plist-put blog-post-plist :url relative-publishing-url))
-
     blog-post-plist))
 
 (defun jekel--blog-posts ()
@@ -238,7 +256,7 @@ Note: `base-directory` has to be defined."
                                         (plist-get a :time)))))
     (sort (loop for file-name in post-files
                 collect (jekel--blog-post-plist file-name))
-          sort-function))))
+          sort-function)))
 
 ;; JEK.EL - PUBLISHING FUNCTIONS
 
@@ -261,7 +279,7 @@ already configured for the current emacs session."
     (org-publish-project (caar (last org-publish-project-alist)))))
 
 (defun jekel--blog-post-publishing-path (plist path-match-data)
-  "Returns the filename for a specific org-file."
+  "aReturns the filename for a specific org-file."
   (let ((category (or (plist-get plist :category) ""))
         (year (nth 1 path-match-data))
         (month (nth 2 path-match-data))
@@ -301,7 +319,6 @@ already configured for the current emacs session."
 
 (defun jekel--publish-coffee (plist source-file-name pub-dir)
   "Publish coffeescripts via `coffee`."
-
   (unless (file-exists-p pub-dir)
     (make-directory pub-dir t))
   (shell-command (format "coffee --output %S --compile %S"
@@ -398,7 +415,7 @@ already configured for the current emacs session."
                            (plist-get plist :jekel-default-layout))
                          "default"))
 
-             (org-export-htmlize-output-type 'css)
+             (org-export-e-htmlize-output-type 'css)
 
              (page-id relative-pub-path)
              (jekel-title (plist-get plist :jekel-title))
@@ -411,22 +428,20 @@ already configured for the current emacs session."
              (page-description (plist-get plist :description))
              (page-time (plist-get plist :time)))
 
-        (let ((exported-html (org-export-as-html headline-levels
-                                                 nil plist 'string
-                                                 t pub-dir)))
-          (save-excursion
-            (unless (file-exists-p pub-dir)
-              (make-directory pub-dir t))
+        (unless (file-exists-p pub-dir)
+          (make-directory pub-dir t))
 
-            (find-file pub-path)
+        (org-export-to-file 'e-html pub-path nil nil t plist)
 
-            (jekel--define-markup-helpers
-             (insert (jekel--render-layout layout
+        (save-excursion
+          (find-file pub-path)
+          (let ((exported-html (buffer-string)))
+            (erase-buffer)
+            (insert (jekel--define-markup-helpers
+                     (jekel--render-layout layout
                                            (markup-raw exported-html))))
-
             (save-buffer)
             (kill-buffer)))
-
 
         (set-buffer init-buf)
         (when (buffer-modified-p init-buf)
@@ -438,7 +453,17 @@ already configured for the current emacs session."
           (kill-buffer init-buf))))))
 
 (defmacro jekel--define-markup-helpers (&rest body)
-  "Defines markup helpers via FLET."
+  "Defines markup helpers via FLET and MACROLET."
+
+  '(javascript-include-tag
+    stylesheet-include-tag
+    blog-posts
+    format-time ; format by string or for given key from plist
+                ; (predefined :json, :xml format strings)
+    link-to
+
+    render-layout)
+
   `(flet ((stylesheet-include-tag (&rest stylesheets)
                                   (markup-raw
                                    (mapconcat '(lambda (stylesheet)
@@ -572,3 +597,5 @@ indentation rules of nxml-mode to separate tags."
     (indent-region begin end)))
 
 (provide 'jekel)
+
+;;; jekel.el ends here

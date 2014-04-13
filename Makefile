@@ -3,7 +3,7 @@ EMACSFLAGS =
 CASK = cask
 VAGRANT = vagrant
 
-OBJECTS = jek.elc
+OBJECTS = jekel.elc
 
 elpa:
 	$(CASK) install

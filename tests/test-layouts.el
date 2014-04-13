@@ -1,6 +1,3 @@
-(require 'ert)
-(require 'jekel)
-
 (ert-deftest read-layout-form ()
   (flet ((insert-file-contents (filename) nil)
          (buffer-string () ""

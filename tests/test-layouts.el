@@ -1,8 +1,8 @@
 (ert-deftest read-layout-form ()
   (noflet ((insert-file-contents (filename) nil)
          (buffer-string () ""
-                        "(:div :class \"content\" \"Some text for that div.\")"))
-    (should (equal (jekel/read-layout-forms "/some/file.html.el")
+                           "(:div :class \"content\" \"Some text for that div.\")"))
+    (should (equal (jekel--read-layout-forms "/some/file.html.el")
                    '(:div :class "content" "Some text for that div.")))))
 
 (ert-deftest read-layout-multiple-forms ()
@@ -10,8 +10,8 @@
 that s-expressions."
   (noflet ((insert-file-contents (filename) nil)
          (buffer-string () ""
-                        "(:div :class \"content\" \"Some text for that div.\")(:footer \"Some text for the footer.\")"))
-    (should (equal (jekel/read-layout-forms "/some/file.html.el")
+                           "(:div :class \"content\" \"Some text for that div.\")(:footer \"Some text for the footer.\")"))
+    (should (equal (jekel--read-layout-forms "/some/file.html.el")
                    '((:div :class "content" "Some text for that div.")
                      (:footer "Some text for the footer."))))))
 
@@ -19,8 +19,8 @@ that s-expressions."
   "When a layout contains a string, the result should be that string"
   (noflet ((insert-file-contents (filename) nil)
          (buffer-string () ""
-                        "\"test\""))
-    (should (equal (jekel/read-layout-forms "/some/file.html.el")
+                           "\"test\""))
+    (should (equal (jekel--read-layout-forms "/some/file.html.el")
                    "test"))))
 
 (ert-deftest read-layout-multiple-string-forms ()
@@ -28,8 +28,8 @@ that s-expressions."
 list of those strings."
   (noflet ((insert-file-contents (filename) nil)
          (buffer-string () ""
-                        "\"test\" \"test2\""))
-    (should (equal (jekel/read-layout-forms "/some/file.html.el")
+                           "\"test\" \"test2\""))
+    (should (equal (jekel--read-layout-forms "/some/file.html.el")
                    '("test" "test2")))))
 
 (ert-deftest read-layout-multiple-mixed-forms ()
@@ -37,8 +37,8 @@ list of those strings."
 list of those expressions."
   (noflet ((insert-file-contents (filename) nil)
          (buffer-string () ""
-                        "\"test\" (:div \"content\") \"test2\" (yield)"))
-    (should (equal (jekel/read-layout-forms "/some/file.html.el")
+                           "\"test\" (:div \"content\") \"test2\" (yield)"))
+    (should (equal (jekel--read-layout-forms "/some/file.html.el")
                    '("test"
                      (:div "content")
                      "test2"

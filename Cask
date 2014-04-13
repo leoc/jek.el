@@ -13,6 +13,7 @@
 (depends-on "markup")
 
 (development
+ (depends-on "noflet")
  (depends-on "el-mock")
  (depends-on "ecukes")
  (depends-on "ert-runner")

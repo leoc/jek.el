@@ -4,6 +4,11 @@
     (setq jekel-test-path (expand-file-name "." current-directory))
     (setq jekel-root-path (expand-file-name ".." current-directory)))
 
+(add-to-list 'load-path jekel-root-path)
+(add-to-list 'load-path jekel-test-path)
+
+(require 'jekel)
+
 (dolist (test-file (directory-files jekel-test-path t "^test-\\(.*\\).el$"))
     (load test-file nil t))
 

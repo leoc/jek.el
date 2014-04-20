@@ -259,6 +259,27 @@ Note: `base-directory` has to be defined."
           sort-function)))
 
 ;; JEK.EL - PUBLISHING FUNCTIONS
+(defun jekel--project-files (directory &optional match ignore)
+  "List files in DIRECTORY recursively.
+Return files that match the regular expression MATCH and ignore "
+  (let* ((files-list '())
+         (directory-files-list (directory-files-and-attributes directory t)))
+    (while directory-files-list
+      (let* ((info (car directory-files-list))
+             (file-name (nth 0 info))
+             (directory-p (nth 1 info))
+             (modification-time (nth 6 info)))
+        (cond
+         ((and ignore (string-match ignore file-name)) nil)
+         ((and (file-regular-p file-name)
+               (or (not match) (string-match match file-name)))
+          (setq files-list (cons `(,file-name ,modification-time) files-list)))
+         ((and (file-directory-p file-name)
+               (not (string-equal "." (substring file-name -1)))
+               (not (string-equal ".." (substring file-name -2))))
+          (setq files-list (append files-list (jekel--project-files file-name match ignore)))))
+        (setq directory-files-list (cdr directory-files-list))))
+    files-list))
 
 (defun jekel/publish ()
   "Generates the documents accoding to the jek.el configuration.

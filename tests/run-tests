@@ -7,6 +7,7 @@
 (add-to-list 'load-path jekel-root-path)
 (add-to-list 'load-path jekel-test-path)
 
+(require 'fakir)
 (require 'noflet)
 (require 'jekel)
 

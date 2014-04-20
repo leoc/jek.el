@@ -14,6 +14,7 @@
 
 (development
  (depends-on "noflet")
+ (depends-on "fakir" :git "https://github.com/leoc/emacs-fakir" :branch "add-fake-directory-files-functions")
  (depends-on "el-mock")
  (depends-on "ecukes")
  (depends-on "ert-runner")

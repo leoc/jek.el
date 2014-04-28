@@ -11,6 +11,7 @@
 (depends-on "f")
 (depends-on "s")
 (depends-on "markup")
+(depends-on "org")
 
 (development
  (depends-on "noflet")

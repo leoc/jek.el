@@ -261,7 +261,7 @@ Note: `base-directory` has to be defined."
 ;; JEK.EL - PUBLISHING FUNCTIONS
 (defun jekel--project-files (directory &optional match ignore)
   "List files in DIRECTORY recursively.
-Return files that match the regular expression MATCH and ignore "
+Return files that match the regular expression MATCH and ignore ones that match IGNORE."
   (let* ((files-list '())
          (directory-files-list (directory-files-and-attributes directory t)))
     (while directory-files-list

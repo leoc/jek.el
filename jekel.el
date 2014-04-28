@@ -281,6 +281,28 @@ Return files that match the regular expression MATCH and ignore ones that match 
         (setq directory-files-list (cdr directory-files-list))))
     files-list))
 
+(defun jekel--org-file-dependencies (file)
+  "Return the list of dependencies for org FILE."
+  (let* ((file-options (jekel--blog-post-plist file))
+         (layout (plist-get file-options :layout))
+         (layout-files (directory-files
+                        (expand-file-name "_layouts" base-directory)
+                        t layout)))
+    (mapcar '(lambda (file)
+               (file-relative-name file base-directory))
+            layout-files)))
+
+(defun jekel--markup-file-dependencies (file)
+  "Return the list of dependencies for markup FILE."
+  (error "Not implemented yet!"))
+
+(defun jekel--file-dependencies (file)
+  "Return the file dependencies for FILE."
+  (cond
+   ((string-match "\\.org$" file) (jekel--org-file-dependencies file))
+   ((string-match "\\.html\\.el$" file) (jekel--markup-file-dependencies file))
+   (t nil)))
+
 (defun jekel/publish ()
   "Generates the documents accoding to the jek.el configuration.
 
